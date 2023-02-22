@@ -1,0 +1,42 @@
+{
+    "_comment": "Create Aws AMI with Ubuntu 20.04",
+    "variables": {
+        "region": "",
+        "source_ami": "",
+        "instance_type": "",
+        "vpc_id": "",
+        "subnet_id": ""
+    },
+    "_comment1": "packer build -var \"aws_secret_key=foo\" packer.json",
+    "_comment2": "packer build -var-file packer-vars.json packer.json",
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "region": "{{user `region`}}",
+            "source_ami": "{{user `source_ami`}}",
+            "instance_type": "{{user `instance_type`}}",
+            "ssh_username": "ubuntu",
+            "ami_name": "DevOpsClass-B26-Build-{{isotime | clean_resource_name}}",
+            "vpc_id": "{{user `vpc_id`}}",
+            "subnet_id": "{{user `subnet_id`}}",
+            "tags": {
+                "Name": "DevOpsClass-B26-Build-{{isotime | clean_resource_name}}"
+            }
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "sleep 15",
+                "sudo useradd -m ansibleadmin --shell /bin/bash",
+                "sudo mkdir -p /home/ansibleadmin/.ssh",
+                "sudo chown -R ansibleadmin /home/ansibleadmin/",
+                "sudo touch /home/ansibleadmin/.ssh/authorized_keys",
+                "sudo usermod -aG sudo ansibleadmin",
+                "echo 'ansibleadmin ALL=(ALL) NOPASSWD: ALL' | sudo tee -a /etc/sudoers",
+                "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzsEivxCf8u9S9NbpZsCrRfshmy8BWUKuxNvmrDOObMALeNmF0T4Oqog2yXDMrOO6Iz9fTpNScPe9CzX5mtxMMK09hQbD1CZaQImYkq2U1UmO4pFgkRsszfvAAqbRPtaa2LTjE7fGOKd/B2S+ve4xD5/uWn3h8N2QODv2UKKwqChMXMthCL9rLuHmxxFrWNSkY2lq42kBN1o4shBbi18vH6liqbK6wkRQCYLtB1TJUDFoMTtydVZS+iXFuxPh6rHoEC+52TriVuHPhaHZYZFwO1GGsKWBsMCtZt83lN/tU/AO3i3VlL5n1JPSN/jqMpqR8pZnHFlTed4sMoMFgGcQx' | sudo tee /home/ansibleadmin/.ssh/authorized_keys"
+            ]
+        }
+    ]
+}

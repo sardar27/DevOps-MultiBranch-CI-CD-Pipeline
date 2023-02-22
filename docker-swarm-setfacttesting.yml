@@ -1,0 +1,126 @@
+#This playbook is for testing setfact rather than using hostvars
+#and see if we can sue setfact directly instead if add_host and
+#shared variable with hostvars
+---
+  - name: Install Docker and Configure Docker Swarm
+    hosts: docker_servers
+    become: yes
+    become_user: root
+    tasks:
+      - name: Install Docker on all docker_servers
+        shell: curl https://get.docker.com | bash
+
+      - name: Check Docker Version
+        shell: docker version | grep -w Version | head -1
+        register: version
+      - debug:
+          var: version
+    tags:
+     - install
+
+  - name: Enable Docker Swarm
+    hosts: docker_master
+    become: yes
+    become_user: root
+    tasks:
+      - name: Enable Docker Swarm on Master docker_servers
+        shell: docker swarm init
+        ignore_errors: yes
+      - name: Get Docker Worker Token
+        shell: docker swarm join-token -q worker
+        register: token
+      - set_fact:
+           swarm_token: "{{ token.stdout }}"
+      - debug:
+          var: token.stdout
+      - name: Get Docker Manager Token
+        shell: docker swarm join-token -q manager
+        register: managertoken
+      - set_fact:
+           swarmmanager_token: "{{ managertoken.stdout }}"
+      - debug:
+          var: swarmmanager_token.stdout
+      - name: Get Docker Master Private IP
+        shell: curl http://169.254.169.254/latest/meta-data/local-ipv4/
+        register: private_ip
+      - set_fact:
+           swarm_ip: "{{ private_ip.stdout }}"
+      - debug:
+          var: private_ip.stdout
+      - name: add variables to dummy host 1
+        add_host:
+         name: "docker_master_node_token"
+         shared_variable:  "{{ swarm_token }}"
+      - name: add variables to dummy host 3
+        add_host:
+         name: "docker_master_node_ip"
+         shared_variable:  "{{ swarm_ip }}"
+      - name: add variables to dummy host 4
+        add_host:
+         name: "docker_master_managernode_token"
+         shared_variable:  "{{ swarmmanager_token }}"
+
+    tags:
+     - swarm
+
+  - name: Add Workers to Swarm
+    hosts: docker_workers
+    become: yes
+    become_user: root
+    vars:
+      private_ip: "{{ hostvars['docker_master_node_ip']['shared_variable'] }}"
+      token: "{{ hostvars['docker_master_node_token']['shared_variable'] }}"
+    tasks:
+      - debug:
+          var: token
+      - debug:
+          var: private_ip
+      - name: Add Workers to Swarm
+        shell: docker swarm join --token "{{ swarm_token }}" "{{ swarm_ip }}":2377
+        ignore_errors: yes
+    tags:
+     - workers
+
+  - name: Add Managers to Swarm
+    hosts: docker_managers
+    become: yes
+    become_user: root
+    vars:
+      private_ip: "{{ hostvars['docker_master_node_ip']['shared_variable'] }}"
+      token: "{{ hostvars['docker_master_managernode_token']['shared_variable'] }}"
+    tasks:
+      - debug:
+          var: token
+      - debug:
+          var: private_ip
+      - name: Add Managers to Swarm
+        shell: docker swarm join --token "{{ swarmmanager_token }}" "{{ swarm_ip }}":2377
+        ignore_errors: yes
+    tags:
+     - managers
+  - name: Deploy Test Application
+    hosts: docker_master
+    become: yes
+    become_user: root
+    vars:
+      private_ip: "{{ hostvars['docker_master_node_ip']['shared_variable'] }}"
+      token: "{{ hostvars['docker_master_managernode_token']['shared_variable'] }}"
+    tasks:
+      - debug:
+          var: token
+      - debug:
+          var: private_ip
+      - name: Delete Docker Service If Exists
+        shell: docker service rm nginx001 
+        ignore_errors: yes
+      - name: Deploy Sample Application
+        shell: docker service create --name nginx002 -p 8000:80 --replicas 6 sreeharshav/rollingupdate:v5
+        ignore_errors: yes
+      - name: Validate Deployment
+        shell: sleep 10 && curl http://"{{ swarm_ip }}":8000
+        register: html
+        ignore_errors: yes
+      - debug:
+         var: html.stdout
+    tags:
+     - managers
