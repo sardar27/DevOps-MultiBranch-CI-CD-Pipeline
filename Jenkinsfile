@@ -116,7 +116,7 @@ pipeline {
                     steps {
                         withAWS(role:'DevOpsJenkinsAssumeRole', roleAccount:'764136601315', duration: 900, roleSessionName: 'jenkins-session') {
                             sh 'rm -f prod-backend.tf'
-                            sh 'terraform init'
+                            sh 'terraform init -reconfigure'
                             sh 'terraform destroy --var-file prod-terraform.tfvars --auto-approve'
                         }
                     }
