@@ -35,7 +35,7 @@
                 "sudo touch /home/ansibleadmin/.ssh/authorized_keys",
                 "sudo usermod -aG sudo ansibleadmin",
                 "echo 'ansibleadmin ALL=(ALL) NOPASSWD: ALL' | sudo tee -a /etc/sudoers",
-                "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDpQCaF6R9MtxxTfBPqCGUFMafEZPODe1MxtKTUCJn0XAXoIocHKbmH/OpFrgDhCp2Wt2fpr6srk7axRMmxcQSRcPPdtD1ag3mU8Xi31XSw+IGKy9AIcF4FDMb/hG6M+lW/Hu0gUtD3mMi/ESnTchouKS4AYeJsj/KnOnQ0F/Js2BW0H5j3260Dmyy3MwZ1qr/Qz8tuerqNK7GVn1YSAcje/LQH5WzWyuKLPrrTMntWe1tqfHUpxw45i9CVElpiRMnXC9bo4XSzbfsOTv/mkYb3SnLLyl5qVGeTNzcCinVUQL33AetpWd+TaGTZQenxkXWmrghBhTcL8vkhIAh/gSs/4+LeiLUxlXsLvsS7c9cN5+zsc38EyDWxGoKkuP08rHVaAODa4KkZzncS78i04/UuC/tJmAiYV4FDMpwhIr3l8IkX6gVS7ifWOmNXRDzqQk5ejg/ZD9zLU0lro5lRGDOn7p2zB4HfjMhvZK7+owzUwl1Lvshpp26++Jrwit9RorU= ubuntu@ip-10-50-3-251' | sudo tee /home/ansibleadmin/.ssh/authorized_keys"
+                "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCU2wDBRRHWM5MFDxPZXD96UZnDw1RPKq58Kd++dJ8rHqXAVEuv6NgtjGiLu3ukTMR4tE5gvOF7xSSGo67wxlyTwsVP/kAFMgXh0Ir4VP16m9gbjEZovtpfSqkE6WsjY84ihVadMpJZ392ja5ebim0NtDQyTDdoTXClFp6UMovPqZbCQwaEBP7iPoeT9hqQ7RE4nxm2AHGp1JU7AQJFBovDEwflsW5S+eidOHt16ul7v7SwJnqNtHxGfNlcF/NNqo9lOLOYIQiieSrSLHL0jzOMsMnx0FXdGXJ+A9H7Gwvg6wez45fQ+s2c5PAvxmuJEVF8t1ZF+3+czKSDdEEdC4iJ' | sudo tee /home/ansibleadmin/.ssh/authorized_keys"
             ]
         }
     ]
