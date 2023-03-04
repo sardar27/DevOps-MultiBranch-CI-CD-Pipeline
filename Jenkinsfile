@@ -143,7 +143,7 @@ pipeline {
                         }
                     }
                     steps { //Assume Role in SreeMasterAccount AWS Account
-                        withAWS(role:'DevOpsJenkinsAssumeRole', roleAccount:'940688021785', duration: 900, roleSessionName: 'jenkins-session') {
+                        withAWS(role:'DevOpsJenkinsAssumeRole', roleAccount:'178392090456', duration: 900, roleSessionName: 'jenkins-session') {
                             sh 'pwd'
                             sh 'rm -f prod-backend.tf'
                             sh 'ls -al'
@@ -178,7 +178,7 @@ pipeline {
                         }
                     }
                     steps {
-                        withAWS(role:'DevOpsJenkinsAssumeRole', roleAccount:'940688021785', duration: 900, roleSessionName: 'jenkins-session') {
+                        withAWS(role:'DevOpsJenkinsAssumeRole', roleAccount:'178392090456', duration: 900, roleSessionName: 'jenkins-session') {
                             sh 'rm -rf .terraform'
                             sh 'rm -f dev-backend.tf'
                             sh 'terraform init'
@@ -194,7 +194,7 @@ pipeline {
                         }
                     }
                     steps {
-                        withAWS(role:'DevOpsJenkinsAssumeRole', roleAccount:'940688021785', duration: 900, roleSessionName: 'jenkins-session') {
+                        withAWS(role:'DevOpsJenkinsAssumeRole', roleAccount:'178392090456', duration: 900, roleSessionName: 'jenkins-session') {
                             sh 'rm -rf .terraform'
                             sh 'terraform init'
                             sh 'terraform apply --var-file prod-terraform.tfvars --auto-approve'
@@ -232,7 +232,7 @@ pipeline {
                         }
                     }
                     steps {
-                        withAWS(role:'DevOpsJenkinsAssumeRole', roleAccount:'940688021785', duration: 900, roleSessionName: 'jenkins-session') {
+                        withAWS(role:'DevOpsJenkinsAssumeRole', roleAccount:'178392090456', duration: 900, roleSessionName: 'jenkins-session') {
                             sh 'rm -f dev-backend.tf'
                             sh 'terraform init'
                             sh 'terraform destroy --var-file prod-terraform.tfvars --auto-approve'

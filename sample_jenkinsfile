@@ -4,15 +4,17 @@ pipeline {
         PROJECT = "WELCOME TO DEVOPS"
     }
     stages {
-        stage('Deploy To Development') {}
+        stage('Deploy To Development') {
         agent { label 'DEV' }
         steps {
         sh "echo Welcome To Development Slave"
         }
-        stage('Deploy To Production') {}
+        }
+        stage('Deploy To Production') {
         agent { label 'PROD' }
         steps {
         sh "echo Welcome To Production Slave"
+        }
         }
     }
 }    
