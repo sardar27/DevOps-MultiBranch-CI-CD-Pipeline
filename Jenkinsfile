@@ -8,10 +8,10 @@ pipeline {
         stage('Deploy To Development') {
             agent { label 'DEV' }
             environment {
-            DEVDEFAULTAMI = "ami-09cd747c78a9add63"
-            PACKER_ACTION = "YES" //YES or NO
-            TERRAFORM_APPLY = "NO" //YES or NO
-            TERRAFORM_DESTROY = "YES" //YES or NO
+            DEVDEFAULTAMI = "ami-0674f0581ef298ca0"
+            PACKER_ACTION = "NO" //YES or NO
+            TERRAFORM_APPLY = "YES" //YES or NO
+            TERRAFORM_DESTROY = "NO" //YES or NO
             ANSIBLE_ACTION = "NO" //YES or NO
             }
             when {
