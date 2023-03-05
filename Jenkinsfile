@@ -93,7 +93,7 @@ pipeline {
                         sh 'sleep 15'
                         sh 'ansible-playbook -i invfile docker-swarm.yml --syntax-check'
                         //Used withCredentials for dry-run as ansible plugin dont have --check option.
-                        withCredentials([file(credentialsId: 'dockey', variable: 'ansiblepvtkey')]) {
+                        withCredentials([file(credentialsId: 'dockey', variable: 'ansiblepvtkey', ssh -oStrictHostKeyChecking=no host)]) {
                         sh "sudo cp \$ansiblepvtkey $WORKSPACE"
                         sh "ls -al"
                         sh "ansible-playbook -i invfile docker-swarm.yml -u ansibleadmin --private-key=dockey.pem --check"
