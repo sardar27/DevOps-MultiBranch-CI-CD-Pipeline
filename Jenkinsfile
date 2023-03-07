@@ -220,8 +220,8 @@ pipeline {
                         sh "ls -al"
                         sh "ansible-playbook -i invfile docker-swarm.yml -u ansibleadmin --private-key=newkey.pem --check"                       
                           
+                        }
                     }
-                }
                 stage('Run Ansible Playbook') {
                     when {
                         expression {
@@ -252,4 +252,5 @@ pipeline {
 
 
     }
+}
 }
