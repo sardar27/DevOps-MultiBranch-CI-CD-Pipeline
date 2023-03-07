@@ -218,6 +218,7 @@ pipeline {
                         withCredentials([file(credentialsId: 'newkey', variable: 'ansiblepvtkey')]) {
                         sh "sudo cp \$ansiblepvtkey $WORKSPACE"
                         sh "ls -al"
+                        sh "sudo chmod 400 newkey.pem"
                         sh "ansible-playbook -i invfile docker-swarm.yml -u ansibleadmin --private-key=newkey.pem --check"                                    
                         }
                     }
