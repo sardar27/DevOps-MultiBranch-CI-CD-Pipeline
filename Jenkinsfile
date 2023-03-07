@@ -8,9 +8,9 @@ pipeline {
         stage('Deploy To Development') {
             agent { label 'DEV' }
             environment {
-            DEVDEFAULTAMI = "ami-0b6dd5ce585aebf7f"
-            PACKER_ACTION = "YES" //YES or NO
-            TERRAFORM_APPLY = "NO" //YES or NO
+            DEVDEFAULTAMI = "ami-08fc1abadb05b6ecc"
+            PACKER_ACTION = "NO" //YES or NO
+            TERRAFORM_APPLY = "YES" //YES or NO
             TERRAFORM_DESTROY = "NO" //YES or NO
             ANSIBLE_ACTION = "NO" //YES or NO
             }
@@ -93,10 +93,10 @@ pipeline {
                         sh 'sleep 15'
                         sh 'ansible-playbook -i invfile docker-swarm.yml --syntax-check'
                         //Used withCredentials for dry-run as ansible plugin dont have --check option.
-                        withCredentials([file(credentialsId: 'dockey', variable: 'ansiblepvtkey')]) {
+                        withCredentials([file(credentialsId: 'newkey', variable: 'ansiblepvtkey')]) {
                         sh "sudo cp \$ansiblepvtkey $WORKSPACE"
                         sh "ls -al"
-                        sh "ansible-playbook -i invfile docker-swarm.yml -u ansibleadmin --private-key /dockey.pem --check"
+                        sh "ansible-playbook -i invfile docker-swarm.yml -u ansibleadmin --private-key /newkey.pem --check"
                         }  
                     }
                 }
