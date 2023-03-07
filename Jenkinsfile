@@ -222,6 +222,7 @@ pipeline {
                           
                         }
                     }
+                }    
                 stage('Run Ansible Playbook') {
                     when {
                         expression {
@@ -252,5 +253,4 @@ pipeline {
 
 
     }
-}
 }
