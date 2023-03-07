@@ -132,9 +132,9 @@ pipeline {
             environment {
             DEVDEFAULTAMI = "ami-082131272807d3a72"
             PACKER_ACTION = "NO" //YES or NO
-            TERRAFORM_APPLY = "NO" //YES or NO
-            TERRAFORM_DESTROY = "YES" //YES or NO
-            ANSIBLE_ACTION = "NO" //YES or NO
+            TERRAFORM_APPLY = "YES" //YES or NO
+            TERRAFORM_DESTROY = "NO" //YES or NO
+            ANSIBLE_ACTION = "YES" //YES or NO
             }
             when {
                 branch 'production'
@@ -214,7 +214,11 @@ pipeline {
                     steps {
                         sh 'sleep 15'
                         sh 'ansible-playbook -i invfile docker-swarm.yml --syntax-check'
-                        sh 'ansible-playbook -i invfile docker-swarm.yml -u ansibleadmin --private-key=/home/ubuntu/ansibleadminkey --check'
+                        //Used withCredentials for dry-run as ansible plugin dont have --check option.
+                        withCredentials([file(credentialsId: 'newkey', variable: 'ansiblepvtkey')]) {
+                        sh "sudo cp \$ansiblepvtkey $WORKSPACE"
+                        sh "ls -al"
+                        sh "ansible-playbook -i invfile docker-swarm.yml -u ansibleadmin --private-key=newkey.pem --check"                       
                           
                     }
                 }
