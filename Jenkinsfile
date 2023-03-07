@@ -96,7 +96,7 @@ pipeline {
                         withCredentials([file(credentialsId: 'dockey', variable: 'ansiblepvtkey')]) {
                         sh "sudo cp \$ansiblepvtkey $WORKSPACE"
                         sh "ls -al"
-                        sh "ansible-playbook -i invfile docker-swarm.yml -u ansibleadmin --private-key=dockey.pem --check"
+                        sh "ansible-playbook -i invfile docker-swarm.yml -u ansibleadmin --private-key /dockey.pem --check"
                         }  
                     }
                 }
